@@ -55,8 +55,6 @@ const generateSpread = (req, res, next) => {
         })
         return
     } 
-    console.log(floor)
-    console.log(ceil)
      next();
 }
 
@@ -64,14 +62,11 @@ const getRandomNumber = (req, res, next) => {
     let floor = req.params.floor;
     let ceil = req.params.ceil;
     let numbers = [];
-    console.log(floor)
-    console.log(ceil)
+    
     for (let i = floor; i <= ceil; i++) {
         numbers.push(i)
     }
-    console.log(floor)
-    console.log(ceil)
-    console.log(numbers)
+   
 
     let randomNumber = Math.floor(Math.random() * (ceil - floor +1) + floor);
     res.json({
@@ -79,10 +74,12 @@ const getRandomNumber = (req, res, next) => {
         range: `[${floor}, ${ceil}]`,
         randPick: numbers[randomNumber]
     })
-    console.log(randomNumber)
+   
 
 }
 app.get('/random/:floor/:ceil', generateSpread, getRandomNumber);
+
+//Queue Manager: Middleware
 
 app.listen(port, (res, req) => {
     console.log(`http://localhost:${port}`);
