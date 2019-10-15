@@ -46,8 +46,8 @@ app.get("/animal/:type", isAnimal, returnAnimal);
 
 //Random Number picker: Middleware
 const generateSpread = (req, res, next) => {
-    let floor = req.params.floor;
-    let ceil = req.params.ceil;
+    let floor = req.query.floor;
+    let ceil = req.query.ceil;
     if (parseInt(floor) > parseInt(ceil)) {
         res.json({
             status: 'failed',
@@ -55,31 +55,29 @@ const generateSpread = (req, res, next) => {
         })
         return
     } 
+ 
      next();
 }
-
 const getRandomNumber = (req, res, next) => {
-    let floor = req.params.floor;
-    let ceil = req.params.ceil;
-    let numbers = [];
-    
-    for (let i = floor; i <= ceil; i++) {
-        numbers.push(i)
-    }
+    let floor = req.query.floor;
+    let ceil = req.query.ceil;
    
-
+    let numbers = [];
+    for (let i = parseInt(floor); i <= parseInt(ceil); i++) {
+        numbers.push(parseInt(i))
+    }
+  
     let randomNumber = Math.floor(Math.random() * (ceil - floor +1) + floor);
     res.json({
         status: 'success',
         range: `[${floor}, ${ceil}]`,
-        randPick: numbers[randomNumber]
+        randPick: `${numbers[randomNumber]}`
     })
    
-
 }
-app.get('/random/:floor/:ceil', generateSpread, getRandomNumber);
+app.get('/random', generateSpread, getRandomNumber);
 
-//Queue Manager: Middleware
+// //Queue Manager: Middleware
 
 app.listen(port, (res, req) => {
     console.log(`http://localhost:${port}`);
