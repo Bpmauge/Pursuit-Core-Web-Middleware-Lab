@@ -45,10 +45,24 @@ const returnAnimal = (req, res, next) => {
 app.get("/animal/:type", isAnimal, returnAnimal);
 
 //Random Number picker: Middleware
+const validNumbers = (req, res, next) => {
+    let floor = parseInt(req.query.floor);
+    let ceil = parseInt(req.query.ceil);
+    if (isNaN(floor) || isNaN(ceil)) {
+        res.json({
+            status: 'failed',
+            message: 'Make sure to use numbers only!'
+        })
+        return
+    } 
+ 
+     next();
+
+}
 const generateSpread = (req, res, next) => {
-    let floor = req.query.floor;
-    let ceil = req.query.ceil;
-    if (parseInt(floor) > parseInt(ceil)) {
+    let floor = parseInt(req.query.floor);
+    let ceil = parseInt(req.query.ceil);
+    if (floor > ceil) {
         res.json({
             status: 'failed',
             message: 'Starting number must be smaller than ending number'
@@ -59,23 +73,24 @@ const generateSpread = (req, res, next) => {
      next();
 }
 const getRandomNumber = (req, res, next) => {
-    let floor = req.query.floor;
-    let ceil = req.query.ceil;
+    let floor = parseInt(req.query.floor);
+    let ceil = parseInt(req.query.ceil);
    
     let numbers = [];
-    for (let i = parseInt(floor); i <= parseInt(ceil); i++) {
-        numbers.push(parseInt(i))
+    for(let i = floor; i<= ceil; i++){
+        numbers.push(i)
     }
-  
-    let randomNumber = Math.floor(Math.random() * (ceil - floor +1) + floor);
+
+  let randomNumber = Math.floor(Math.random() * (numbers.length))
+
     res.json({
         status: 'success',
-        range: `[${floor}, ${ceil}]`,
-        randPick: `${numbers[randomNumber]}`
+        range: `[${floor} to ${ceil}]`,
+        randPick: numbers[randomNumber]
     })
    
 }
-app.get('/random', generateSpread, getRandomNumber);
+app.get('/random', validNumbers, generateSpread, getRandomNumber);
 
 // //Queue Manager: Middleware
 
